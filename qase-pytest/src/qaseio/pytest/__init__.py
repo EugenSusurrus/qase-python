@@ -7,7 +7,7 @@ from typing import Tuple, Union
 
 import pytest
 
-from qaseio.pytest.plugin import QasePytestPluginSingleton
+from qaseio.pytest.plugin import PluginNotInitializedException, QasePytestPluginSingleton
 
 try:
     # Change here if project is renamed and does not equal the package name
@@ -112,9 +112,15 @@ class qase:
         try:
             plugin = QasePytestPluginSingleton.get_instance()
             position = plugin.start_step(identifier)
+        except PluginNotInitializedException:
             yield
-            plugin.finish_step(position)
-        except Exception as e:
-            if position:
-                plugin.finish_step(position, exception=e)
-            raise e
+        except AttributeError:
+            yield
+        else:
+            try:
+                yield
+                plugin.finish_step(position)
+            except Exception as e:
+                if position:
+                    plugin.finish_step(position, exception=e)
+                raise e

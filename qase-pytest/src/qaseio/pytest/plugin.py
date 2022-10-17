@@ -57,6 +57,10 @@ class MissingStepIdentifierException(Exception):
     pass
 
 
+class PluginNotInitializedException(Exception):
+    pass
+
+
 class QasePytestPlugin:
     testrun: TestRunInfo = None
     meta_run_file = pathlib.Path("qaseio.runid")
@@ -412,7 +416,7 @@ class QasePytestPluginSingleton:
     def get_instance() -> QasePytestPlugin:
         """ Static access method"""
         if QasePytestPluginSingleton._instance is None:
-            raise Exception("Init plugin first")
+            raise PluginNotInitializedException("Init plugin first")
         return QasePytestPluginSingleton._instance
 
     def __init__(self):
