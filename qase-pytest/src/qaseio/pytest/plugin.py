@@ -1,4 +1,5 @@
 import logging
+import sys
 import pathlib
 import time
 from datetime import datetime
@@ -161,7 +162,7 @@ class QasePytestPlugin:
             self.testrun_id = self.client.runs.create(
                 self.project_code,
                 TestRunCreate(
-                    "Automated Run {}".format(str(datetime.now())),
+                    f"[{sys.platform}] Automated Run {datetime.now()}",
                     cases=cases,
                 ),
             ).id
