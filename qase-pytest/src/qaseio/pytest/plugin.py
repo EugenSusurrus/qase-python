@@ -162,7 +162,7 @@ class QasePytestPlugin:
             self.testrun_id = self.client.runs.create(
                 self.project_code,
                 TestRunCreate(
-                    f"[{sys.platform}] Automated Run {datetime.now()}",
+                    f"[{sys.platform}] Automated Run {datetime.now().isoformat(timespec='seconds', sep=' ')}",
                     cases=cases,
                 ),
             ).id
