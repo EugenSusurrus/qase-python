@@ -1,6 +1,7 @@
 import logging
-import sys
+import os
 import pathlib
+import platform
 import time
 from datetime import datetime
 from typing import Tuple, Union
@@ -159,13 +160,17 @@ class QasePytestPlugin:
 
     def create_testrun(self, cases):
         if cases:
+            title = f"[{platform.system()}] Automated Run {datetime.now().isoformat(timespec='seconds', sep=' ')}"
+            description = (
+                f"* AUT: {os.getenv('CI_AUT_DOWNLOAD_LOCATION')}\n"
+                f"* Platform: {platform.platform()}\n"
+            )
+
             self.testrun_id = self.client.runs.create(
                 self.project_code,
-                TestRunCreate(
-                    f"[{sys.platform}] Automated Run {datetime.now().isoformat(timespec='seconds', sep=' ')}",
-                    cases=cases,
-                ),
+                TestRunCreate(title=title, cases=cases, description=description),
             ).id
+
             print()
             print(
                 "Qase TMS: created testrun "
